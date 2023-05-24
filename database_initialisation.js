@@ -58,9 +58,10 @@ con.connect(function(err) {
     
     const comments = `CREATE TABLE comments (
       comments_ID integer PRIMARY KEY AUTO_INCREMENT, 
-      author_ID integer, 
-      content TEXT(160), 
-      post_ID integer, 
+      author_ID integer NOT NULL, 
+      content TEXT(160) NOT NULL, 
+      post_ID integer NOT NULL, 
+      reply_to_ID integer,
       created TIMESTAMP NOT NULL DEFAULT NOW(),
       FOREIGN KEY (author_ID) REFERENCES userBase(user_ID), 
       FOREIGN KEY (post_ID) REFERENCES posts(post_ID)
@@ -85,3 +86,5 @@ con.connect(function(err) {
     });
     console.log("Completed the set up")
 });
+
+System.exit(0)
