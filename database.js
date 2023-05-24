@@ -11,10 +11,10 @@ const pool = mysql.createPool({
 
 // REQUEST DATA ------------------------------------------
 
-export async function getUserID(username) {
+export async function getUserID(username) { //// NEEDS FIXINGGG
   const [user] =  await pool.query(`
   SELECT * 
-  FROM userBase 
+  FROM userbase 
   WHERE username = ?
   `, [username])
   return user
@@ -33,7 +33,7 @@ export async function getProfile(user_ID) {
   const [rows] = await pool.query(`
     SELECT * 
     FROM userBase
-    WHERE id = ?
+    WHERE user_ID = ?
     `, [user_ID])
     return rows
 }
@@ -104,7 +104,7 @@ export async function getUserComments(user_ID) {
 // ADD USERS / POSTS / COMMENTS / LIKES -----------------------------------------
 
 export async function addUser(email, username, hash_password, first_name, last_name) {
-  const [rows] = await pool.query(`INSERT INTO userBase (email, username, hash_password, first_name, last_name) VALUES ?`, [[email, username, hash_password, first_name, last_name]])
+  const [rows] = await pool.query(`INSERT INTO userBase (email, username, password, first_name, last_name) VALUES (?)`, [[email, username, hash_password, first_name, last_name]])
   return rows
 }
 

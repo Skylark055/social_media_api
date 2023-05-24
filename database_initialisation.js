@@ -17,7 +17,7 @@ con.connect(function(err) {
       user_ID integer PRIMARY KEY AUTO_INCREMENT, 
       email VARCHAR(255) NOT NULL, 
       username VARCHAR(32) NOT NULL, 
-      password BINARY(64) NOT NULL, 
+      password BINARY(128) NOT NULL, 
       first_name VARCHAR(255) NOT NULL, 
       last_name VARCHAR(255) NOT NULL, 
       created TIMESTAMP NOT NULL DEFAULT NOW()
@@ -86,5 +86,3 @@ con.connect(function(err) {
     });
     console.log("Completed the set up")
 });
-
-System.exit(0)

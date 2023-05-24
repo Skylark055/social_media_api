@@ -1,5 +1,5 @@
 import express from 'express'
-import { addFriend, addUser, changeLikeStatus, createComment, createPost, delFriend, deleteComment, deletePost, deleteUser, editPost, getAllPosts, getComments, getLikes, getPost, getProfile, getUserComments, getUserLikes, getUserPosts } from './database.js'
+import { addFriend, addUser, changeLikeStatus, createComment, createPost, delFriend, deleteComment, deletePost, deleteUser, editDescriptionPost, getAllPosts, getComments, getLikes, getPost, getProfile, getUserComments, getUserLikes, getUserID, getUserPosts } from './database.js'
 import CryptoJS from 'crypto-js'
 
 const app = express()
@@ -76,7 +76,7 @@ app.get('/posts/:id/likes', async (req, res) => {
 app.post('/register', async (req, res) => { 
   var {email, username, password, first_name, last_name} = req.body
   password = CryptoJS.SHA512(password)
-  user = await addUser(email, username, password, first_name, last_name)
+  const user = await addUser(email, username, password, first_name, last_name)
   res.status(201).send(user.user_ID)
 })
 
@@ -89,8 +89,8 @@ app.post('/posts', async (req, res) => {
 app.post('/posts/:id/edit', async (req, res) => {
   const id = req.params.id
   const {description} = req.body
-  const edit = await editPost(id, description)
-  res.status(200).send(user.user_ID)
+  const edit = await editDescriptionPost(id, description)
+  res.status(200).send(edit)
 })
 
 app.post('/posts/:id/comments', async (req, res) => {
