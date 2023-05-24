@@ -113,7 +113,7 @@ export async function createPost(user_ID, image, description) {
   return rows
 }
 
-export async function editPost(post_ID, new_description) { 
+export async function editDescriptionPost(post_ID, new_description) { 
   const [rows] = await pool.query(String.format(`UPDATE customers SET description = %s WHERE post_ID = %s`,new_description, post_ID))
   return rows
 }

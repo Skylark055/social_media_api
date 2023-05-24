@@ -1,7 +1,6 @@
 import express from 'express'
-import { addUser, createPost, getAllPosts, getComments, getLikes, getPost, getProfile, getUserComments, getUserLikes, getUserPosts } from './database.js'
+import { addFriend, addUser, changeLikeStatus, createComment, createPost, delFriend, deleteComment, deletePost, deleteUser, editPost, getAllPosts, getComments, getLikes, getPost, getProfile, getUserComments, getUserLikes, getUserPosts } from './database.js'
 import CryptoJS from 'crypto-js'
-import { createPool } from 'mysql2'
 
 const app = express()
 
@@ -87,7 +86,59 @@ app.post('/posts', async (req, res) => {
   res.status(201).send (post)
 })
 
-app.post('/posts/:id/edit', async)
+app.post('/posts/:id/edit', async (req, res) => {
+  const id = req.params.id
+  const {description} = req.body
+  const edit = await editPost(id, description)
+  res.status(200).send(user.user_ID)
+})
+
+app.post('/posts/:id/comments', async (req, res) => {
+  const id = req.params.id
+  const {user_ID, content} = req.body
+  const comment = await createComment(id, user_ID, content)
+  res.status(201).send(comment)
+})
+
+app.post('/posts/:id', async (req, res) => { 
+  const id = req.params.id
+  const like = changeLikeStatus(id, user_ID)  // still needs to be implemented
+  res.status(200).send(like)
+})
+
+app.post('/profile/:id/friends', async (req, res) => {
+  const id = req.params.id
+  const friend_ID = req.body
+  const friend = addFriend(id, friend_ID)
+  res.status(200).send(friend)
+})
+
+// ALL THE API DELETE REQUESTS  -----------------------------
+
+app.post('/profile/:id/delete', async (req, res) => { 
+  const id = req.params.id
+  const user = await deleteUser(id)
+  res.status(200).send(user)
+})
+
+app.post('/posts/:id/delete', async (req, res) => {
+  const id = req.params.id 
+  const post = await deletePost(id)
+  res.status(200).send (post)
+})
+
+app.post('/posts/:id/comments/delete', async (req, res) => {
+  const id = req.params.id
+  const comment = await deleteComment(id)
+  res.status(200).send(comment)
+})
+
+app.post('/profile/:id/friends/delete', async (req, res) => {
+  const id = req.params.id
+  const friend_ID = req.body
+  const friend = delFriend(id, friend_ID)
+  res.status(200).send(friend)
+})
 
 // Error handling and server start -----------------------------
 
