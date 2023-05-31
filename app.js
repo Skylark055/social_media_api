@@ -1,6 +1,11 @@
 import express from 'express'
-import { addFriend, addUser, changeLikeStatus, createComment, createPost, delFriend, deleteComment, deletePost, deleteUser, editDescriptionPost, getAllPosts, getComments, getLikes, getPost, getProfile, getUserComments, getUserLikes, getUserID, getUserPosts } from './database.js'
 import CryptoJS from 'crypto-js'
+
+import { getUserID, getProfile, addUser, deleteUser} from './database_requests/user_db'
+import { getPost, getAllPosts, getUserPosts, createPost, editDescriptionPost, deletePost } from './database_requests/post_db'
+import { getLikes, changeLikeStatus, getUserLikes } from './database_requests/like_db'
+import { getComments, getUserComments, createComment, deleteComment } from './database_requests/comment_db'
+import { getUserFriends, addFriend, delFriend } from './database_requests/friends_db'
 
 const app = express()
 
@@ -43,6 +48,13 @@ app.get('profile/:id/comments', async (req, res) => {
   // return user comments
 })
 
+app.get('/profile/:id/friends', async (req, res) => { 
+  const id = req.params.id
+  const friends = await getUserFriends(id)
+  res.send (friends)
+  // return user friends
+})
+
 app.get('/posts', async (req, res) => { 
   const posts = await getAllPosts()
   res.send (posts)
@@ -74,7 +86,7 @@ app.get('/posts/:id/likes', async (req, res) => {
 // ALL THE POST REQUESTS FOR THE API -----------------------------
 
 app.post('/register', async (req, res) => { 
-  var {email, username, password, first_name, last_name} = req.body
+  let {email, username, password, first_name, last_name} = req.body
   password = CryptoJS.SHA512(password)
   const user = await addUser(email, username, password, first_name, last_name)
   res.status(201).send(user.user_ID)

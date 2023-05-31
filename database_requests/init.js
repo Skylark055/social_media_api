@@ -1,29 +1,20 @@
-import mysql from 'mysql2'
-import dotenv from 'dotenv'
-dotenv.config()
+const pool = require('./mysql_connector')
 
-var con = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-});
-
-con.connect(function(err) {
+pool.connect(function(err) {
     if (err) throw err;
     console.log("Connected!");
 
     const userBase = `CREATE TABLE userBase (
       user_ID integer PRIMARY KEY AUTO_INCREMENT, 
-      email VARCHAR(255) NOT NULL, 
-      username VARCHAR(32) NOT NULL, 
+      email VARCHAR(255) UNIQUE NOT NULL, 
+      username VARCHAR(32) UNIQUE NOT NULL, 
       password BINARY(128) NOT NULL, 
       first_name VARCHAR(255) NOT NULL, 
       last_name VARCHAR(255) NOT NULL, 
       created TIMESTAMP NOT NULL DEFAULT NOW()
   )`;
     
-    con.query(userBase, function (err, result) {
+    pool.query(userBase, function (err, result) {
       if (err) throw err;
       console.log("Table userBase created");
     });
@@ -37,7 +28,7 @@ con.connect(function(err) {
       created TIMESTAMP NOT NULL DEFAULT NOW(),
       FOREIGN KEY (author_ID) REFERENCES userBase(user_ID)
   )`;
-  con.query(posts, function (err, result) {
+  pool.query(posts, function (err, result) {
       if (err) throw err;
       console.log("Table posts created");
     });
@@ -51,7 +42,7 @@ con.connect(function(err) {
       FOREIGN KEY (post_ID) REFERENCES posts(post_ID)
   )`;
 
-    con.query(likes, function (err, result) {
+    pool.query(likes, function (err, result) {
         if (err) throw err;
         console.log("Table likes created");
       });
@@ -67,7 +58,7 @@ con.connect(function(err) {
       FOREIGN KEY (post_ID) REFERENCES posts(post_ID)
   )`;
 
-    con.query(comments, function (err, result) {
+    pool.query(comments, function (err, result) {
         if (err) throw err;
         console.log("Table comments created");
       });
@@ -80,7 +71,7 @@ con.connect(function(err) {
       CONSTRAINT fk_friend_ID FOREIGN KEY (friend_ID) REFERENCES userBase(user_ID),
       CONSTRAINT fk_profile_ID FOREIGN KEY (profile_ID) REFERENCES userBase(user_ID)
   )`;
-    con.query(friends, function (err, result) {
+    pool.query(friends, function (err, result) {
         if (err) throw err;
         console.log("Table friends created");
     });
